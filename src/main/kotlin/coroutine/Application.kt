@@ -16,9 +16,11 @@ fun main() =
     runBlocking(Dispatchers.IO) {
         val channels =
             listOf(
-                Channel("https://woowabros.github.io/feed.xml"),
-                Channel("https://toss.tech/rss.xml"),
-            )
+                "https://woowabros.github.io/feed.xml",
+                "https://toss.tech/rss.xml",
+                "https://helloworld.kurly.com/feed.xml",
+                "https://developers.hyundaimotorgroup.com/blog/rss",
+            ).map { Channel(it) }
 
         val postStore = PostStore()
 
