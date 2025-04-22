@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 
 fun main() =
     runBlocking {
-        val clients =
+        val channels =
             listOf(
                 Channel("https://woowabros.github.io/feed.xml"),
                 Channel("https://toss.tech/rss.xml"),
@@ -20,13 +20,15 @@ fun main() =
 
         val postStore =
             PostStore().apply {
-                persistAll(clients.posts())
+                persistAll(channels.posts())
             }
 
-        val input = InputView.readSearchKeyword()
-        val result = postStore.findByTitleIn(input)
+        while (true) {
+            val input = InputView.readSearchKeyword()
+            val result = postStore.findByTitleIn(input)
 
-        OutputView.printResult(result)
+            OutputView.printResult(result)
+        }
     }
 
 private suspend fun List<Channel>.posts(): List<Post> {
