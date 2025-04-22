@@ -1,24 +1,22 @@
 package corountines.domain
 
 import corountines.client.Channel
-import corountines.view.OutputView
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 class PostStore(
-    val channels: List<Channel>,
     val posts: MutableList<Post> = mutableListOf(),
 ) {
-    suspend fun persistAll() {
+    suspend fun persistAll(channels: List<Channel>): List<Post> {
         val posts = channels.posts()
         if (posts.isNotEmpty()) {
             val newItemList = posts.filter { it !in this.posts }.take(5)
 
-            OutputView.printNewItemResult(newItemList)
-
             this.posts.addAll(newItemList)
+            return newItemList
         }
+        return listOf()
     }
 
     fun findByTitleIn(title: String): List<Post> {

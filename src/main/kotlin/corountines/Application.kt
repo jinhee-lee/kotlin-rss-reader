@@ -23,12 +23,13 @@ fun main() =
                 Channel("https://toss.tech/rss.xml"),
             )
 
-        val postStore = PostStore(channels)
+        val postStore = PostStore()
 
         val readJob =
             launch(Dispatchers.IO) {
                 while (isActive) {
-                    postStore.persistAll()
+                    val posts = postStore.persistAll(channels)
+                    OutputView.printNewItemResult(posts)
                     delay(1000 * 5)
                 }
             }
