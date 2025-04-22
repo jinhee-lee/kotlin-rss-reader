@@ -1,8 +1,8 @@
 package corountines
 
-import corountines.client.FeedClient
-import corountines.domain.FeedItem
-import corountines.domain.FeedStore
+import corountines.client.Channel
+import corountines.domain.Post
+import corountines.domain.PostStore
 import corountines.view.InputView
 import corountines.view.OutputView
 import kotlinx.coroutines.async
@@ -14,25 +14,25 @@ fun main() =
     runBlocking {
         val clients =
             listOf(
-                FeedClient("https://woowabros.github.io/feed.xml"),
-                FeedClient("https://toss.tech/rss.xml"),
+                Channel("https://woowabros.github.io/feed.xml"),
+                Channel("https://toss.tech/rss.xml"),
             )
 
-        val feedStore =
-            FeedStore().apply {
-                addAll(clients.reads())
+        val postStore =
+            PostStore().apply {
+                persistAll(clients.posts())
             }
 
         val input = InputView.readSearchKeyword()
-        val result = feedStore.findByTitleContains(input)
+        val result = postStore.findByTitleIn(input)
 
         OutputView.printResult(result)
     }
 
-private suspend fun List<FeedClient>.reads(): List<FeedItem> {
+private suspend fun List<Channel>.posts(): List<Post> {
     return coroutineScope {
-        this@reads.map {
-            async { it.read() }
+        this@posts.map {
+            async { it.findPosts() }
         }.awaitAll().flatten()
     }
 }

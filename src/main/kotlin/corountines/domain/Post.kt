@@ -3,7 +3,7 @@ package corountines.domain
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-class FeedItem(
+class Post(
     val title: String,
     val link: String,
     val publishedAt: OffsetDateTime,
