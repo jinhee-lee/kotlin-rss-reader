@@ -27,12 +27,13 @@ fun main() =
 
 
         val postStore = PostStore()
-        val readJob = launch {
-            withContext(Dispatchers.IO) {
-                while (isActive) {
-                    postStore.persistAll(posts3(channels))
-                    delay(1000 * 5)
-                }
+
+
+
+        val readJob = launch(Dispatchers.IO) {
+            while (isActive) {
+                postStore.persistAll(posts3(channels))
+                delay(1000 * 5)
             }
         }
 
