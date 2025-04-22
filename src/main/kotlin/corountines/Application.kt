@@ -10,6 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
@@ -21,17 +25,27 @@ fun main() =
                 Channel("https://toss.tech/rss.xml"),
             )
 
-        val postStore =
-            PostStore().apply {
-                persistAll(channels.posts())
+
+        val postStore = PostStore()
+        val readJob = launch {
+            withContext(Dispatchers.IO) {
+                while (isActive) {
+                    postStore.persistAll(posts3(channels))
+                    delay(1000 * 5)
+                }
             }
-
-        while (true) {
-            val input = InputView.readSearchKeyword()
-            val result = postStore.findByTitleIn(input)
-
-            OutputView.printResult(result)
         }
+
+
+
+        val inputJob = launch {
+            while (isActive) {
+                val input = async { InputView.readSearchKeyword() }
+                val result = postStore.findByTitleIn(input.await())
+                OutputView.printResult(result)
+            }
+        }
+
     }
 
 private suspend fun List<Channel>.posts(): List<Post> {

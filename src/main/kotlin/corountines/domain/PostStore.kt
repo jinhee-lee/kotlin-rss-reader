@@ -1,13 +1,21 @@
 package corountines.domain
 
+import corountines.view.OutputView
+
 class PostStore(
     val posts: MutableList<Post> = mutableListOf(),
 ) {
     fun persistAll(posts: List<Post>) {
         if (posts.isNotEmpty()) {
-            this.posts.addAll(posts)
+            val newItemList = posts.filter { it !in this.posts }.take(5)
+
+            OutputView.printNewItemResult(newItemList)
+
+            this.posts.addAll(newItemList)
         }
     }
+
+
 
     fun findByTitleIn(title: String): List<Post> {
         if (title.isEmpty()) {
