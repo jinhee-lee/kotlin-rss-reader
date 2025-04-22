@@ -38,7 +38,6 @@ private suspend fun List<Channel>.posts(): List<Post> {
                 runCatching {
                     it.findPosts()
                 }.getOrElse { emptyList() }
-
             }
         }.awaitAll().flatten()
     }

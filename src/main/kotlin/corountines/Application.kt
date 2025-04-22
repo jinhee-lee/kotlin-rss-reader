@@ -1,19 +1,15 @@
 package corountines
 
 import corountines.client.Channel
-import corountines.domain.Post
 import corountines.domain.PostStore
 import corountines.view.InputView
 import corountines.view.OutputView
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 fun main() =
     runBlocking {
@@ -29,7 +25,7 @@ fun main() =
             launch(Dispatchers.IO) {
                 while (isActive) {
                     val posts = postStore.persistAll(channels)
-                    OutputView.printNewItemResult(posts)
+                    OutputView.printNewPosts(posts)
                     delay(1000 * 5)
                 }
             }
@@ -39,20 +35,7 @@ fun main() =
                 while (isActive) {
                     val input = async { InputView.readSearchKeyword() }
                     val result = postStore.findByTitleIn(input.await())
-                    OutputView.printResult(result)
+                    OutputView.printSearchResults(result)
                 }
             }
     }
-
-private suspend fun List<Channel>.posts2(): List<Post> {
-    return withContext(Dispatchers.IO) {
-        map {
-            async { it.findPosts() }
-        }.awaitAll().flatten()
-    }
-}
-
-private suspend fun CoroutineScope.posts3(channels: List<Channel>): List<Post> {
-    return channels.map { async { it.findPosts() } }
-        .awaitAll().flatten()
-}

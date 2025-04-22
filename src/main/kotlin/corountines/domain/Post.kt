@@ -15,5 +15,10 @@ data class Post(
             )
         }) - $link"
 
-    fun newItemDisplay(number: Int): String = "[새로운 피드가 등록됐습니다.] ${display(number)}"
+    fun newItemDisplay(number: Int): String =
+        "[NEW] $title (${
+            publishedAt.format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+            )
+        }) - $link"
 }
