@@ -11,10 +11,9 @@ class PostStore(
     suspend fun persistAll(channels: List<Channel>): List<Post> {
         val posts = channels.posts()
         if (posts.isNotEmpty()) {
-            val newItemList = posts.filter { it !in this.posts }.take(5)
-
-            this.posts.addAll(newItemList)
-            return newItemList
+            val newPosts = posts.filter { it !in this.posts }.take(5)
+            this.posts.addAll(newPosts)
+            return newPosts
         }
         return listOf()
     }
