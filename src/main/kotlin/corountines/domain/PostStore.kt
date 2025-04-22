@@ -34,7 +34,12 @@ class PostStore(
 private suspend fun List<Channel>.posts(): List<Post> {
     return coroutineScope {
         this@posts.map {
-            async { it.findPosts() }
+            async {
+                runCatching {
+                    it.findPosts()
+                }.getOrElse { emptyList() }
+
+            }
         }.awaitAll().flatten()
     }
 }

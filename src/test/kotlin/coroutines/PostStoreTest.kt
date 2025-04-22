@@ -40,4 +40,33 @@ class PostStoreTest {
                 checkJob.join()
             }
         }
+
+    @Test
+    fun test_persist_and_read_error() =
+
+        runTest {
+            val channel1 = mockk<Channel>()
+            every { channel1.findPosts() } answers { listOf(mockk<Post>()) }
+
+            val channel2 = mockk<Channel>()
+            every { channel2.findPosts() } throws java.io.IOException()
+
+            val postStore = PostStore()
+
+            repeat(3) {
+                val job =
+                    launch(Dispatchers.IO) {
+                        println("Job1 > in ${Thread.currentThread()}")
+                        postStore.persistAll(listOf(channel1, channel2))
+                    }
+                job.join()
+
+                val checkJob =
+                    launch {
+                        println("Job2 > in ${Thread.currentThread()}")
+                        postStore.posts.size shouldBe (it + 1)
+                    }
+                checkJob.join()
+            }
+        }
 }
