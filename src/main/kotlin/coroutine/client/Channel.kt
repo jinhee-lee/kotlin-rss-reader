@@ -1,6 +1,6 @@
-package corountines.client
+package coroutine.client
 
-import corountines.domain.Post
+import coroutine.domain.Post
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList
 import java.time.OffsetDateTime

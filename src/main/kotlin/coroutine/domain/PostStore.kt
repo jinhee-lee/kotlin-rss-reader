@@ -1,6 +1,6 @@
-package corountines.domain
+package coroutine.domain
 
-import corountines.client.Channel
+import coroutine.client.Channel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -11,7 +11,7 @@ class PostStore(
     suspend fun persistAll(channels: List<Channel>): List<Post> {
         val posts = channels.posts()
         if (posts.isNotEmpty()) {
-            val newPosts = posts.filter { it !in this.posts }.take(5)
+            val newPosts = posts.filter { it !in this.posts }
             this.posts.addAll(newPosts)
             return newPosts
         }

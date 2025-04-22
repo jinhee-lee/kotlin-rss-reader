@@ -1,4 +1,4 @@
-package corountines.view
+package coroutine.view
 
 object InputView {
     fun readSearchKeyword(): String {

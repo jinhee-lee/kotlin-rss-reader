@@ -76,6 +76,7 @@ RSS 피드를 10분마다 주기적으로 확인한다.
 ```
 
 힌트
+```
 runBlocking {
 launch(Dispatchers.IO) {
 while (isActive) {
@@ -91,4 +92,4 @@ val keyword = readLine()
             // ...
         }
     }
-}
+}```

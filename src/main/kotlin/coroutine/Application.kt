@@ -1,18 +1,19 @@
-package corountines
+package coroutine
 
-import corountines.client.Channel
-import corountines.domain.PostStore
-import corountines.view.InputView
-import corountines.view.OutputView
+import coroutine.client.Channel
+import coroutine.domain.PostStore
+import coroutine.view.InputView
+import coroutine.view.OutputView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.Duration
 
 fun main() =
-    runBlocking {
+    runBlocking(Dispatchers.IO) {
         val channels =
             listOf(
                 Channel("https://woowabros.github.io/feed.xml"),
@@ -22,11 +23,11 @@ fun main() =
         val postStore = PostStore()
 
         val readJob =
-            launch(Dispatchers.IO) {
+            launch {
                 while (isActive) {
                     val posts = postStore.persistAll(channels)
                     OutputView.printNewPosts(posts)
-                    delay(1000 * 5)
+                    delay(Duration.ofMinutes(10).toMillis())
                 }
             }
 
@@ -38,4 +39,7 @@ fun main() =
                     OutputView.printSearchResults(result)
                 }
             }
+
+        inputJob.join()
+        readJob.cancel()
     }

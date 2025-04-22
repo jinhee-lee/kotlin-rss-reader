@@ -1,4 +1,4 @@
-package corountines.domain
+package coroutine.domain
 
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter

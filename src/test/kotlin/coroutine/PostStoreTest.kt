@@ -1,8 +1,8 @@
-package coroutines
+package coroutine
 
-import corountines.client.Channel
-import corountines.domain.Post
-import corountines.domain.PostStore
+import coroutine.client.Channel
+import coroutine.domain.Post
+import coroutine.domain.PostStore
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
